@@ -1,0 +1,16 @@
+:root {
+  --font-elms-sans: "Elms Sans", sans-serif;
+  --font-weight-semibold: 600;
+  --font-weight-regular: 400;
+
+  /* Head */
+  --font-heading-weight: 600;
+
+  --font-heading-title-size: 80px;
+  --font-heading-lg-size: 50px;
+  --font-heading-md-size: 24px;
+
+  /* Body */
+  --font-body-md-size: 18px;
+  --font-body-sm-size: 14px;
+}

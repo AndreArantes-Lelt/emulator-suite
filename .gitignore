@@ -9,3 +9,6 @@ env/
 # Ignorar arquivos de cache do Python
 __pycache__/
 *.pyc
+
+# packages
+node_modules/

@@ -1,0 +1,26 @@
+@import url("tokens/_colors.css");
+@import url("tokens/_spacing.css");
+@import url("tokens/_typography.css");
+
+:root {
+  font-family: var(--font-elms-sans);
+  font-size: var(--font-heading-md-size);
+
+  color: var(--pallete-dark-blue);
+  background: var(--pallete-dark-blue);
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  margin: 0 auto;
+  display: flex;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  height: 0;
+}
