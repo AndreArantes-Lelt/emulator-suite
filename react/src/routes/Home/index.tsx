@@ -7,10 +7,7 @@ function Home() {
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const handleCloseModal = () => {
-    setError(false);
-  };
+  const [environment, setEnvironment] = useState<string>("HOM");
 
   type FieldType = {
     environment: string;
@@ -28,31 +25,20 @@ function Home() {
     setErrorMessage(err.message);
   };
 
-  const onEnvironmentChange = (value: string) => {
-    switch (value) {
-      case "HOM":
-        // TODO: set to environment
-        break;
-      case "PROD":
-        // TODO: set to environment
-        break;
-      case "DEV":
-        // TODO: set to environment
-        break;
-      default:
-    }
+  const handleCloseModal = () => {
+    setError(false);
   };
 
   return (
     <section className="canva">
       <div className="sidebar">
         <h1>Login</h1>
+
         <Form
           name="basic"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
+          layout="vertical"
+          classNames={{ label: "sidebar__labels" }}
+          initialValues={{ environment: "HOM" }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -63,9 +49,12 @@ function Home() {
             rules={[{ required: true }]}
           >
             <Select
-              allowClear
-              placeholder="Select a option and change input text above"
-              onChange={onEnvironmentChange}
+              classNames={{
+                root: "sidebar__fields",
+                content: "sidebar__fields",
+              }}
+              value={environment}
+              onChange={(e) => setEnvironment(e)}
               options={[
                 { label: "HOM", value: "HOM" },
                 { label: "PROD", value: "PROD" },
@@ -79,7 +68,7 @@ function Home() {
             name="username"
             rules={[{ required: true, message: "Required field" }]}
           >
-            <Input />
+            <Input className="sidebar__fields" />
           </Form.Item>
 
           <Form.Item<FieldType>
@@ -87,7 +76,7 @@ function Home() {
             name="password"
             rules={[{ required: true, message: "Required field" }]}
           >
-            <Input.Password />
+            <Input.Password className="sidebar__fields" />
           </Form.Item>
 
           <Form.Item label={null}>
@@ -100,6 +89,7 @@ function Home() {
       <div className="content"></div>
 
       <Modal open={isError} onOk={handleCloseModal} onCancel={handleCloseModal}>
+        <WarningIcon size={30} />
         <p>{errorMessage}</p>
       </Modal>
     </section>

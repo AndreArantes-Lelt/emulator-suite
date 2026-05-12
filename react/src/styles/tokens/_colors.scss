@@ -1,8 +1,7 @@
 :root {
+  --white: #e0e3ec;
   --black: #16171d;
-
-  --gray-01: #383e44;
-  --gray-02: #6e717d;
+  --gray: #2d2f3f;
 
   --red-01: #4c0500;
   --red-02: #990a00;
@@ -18,5 +17,6 @@
   --orange-01: #ff7410;
   --orange-02: #ff9e58;
 
-  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 }
