@@ -44,32 +44,18 @@ body {
   display: flex;
   flex-direction: column;
   place-content: center;
+  place-items: center;
   text-align: center;
-  width: 30dvw;
+  width: 20dvw;
   padding: var(--space-20);
   background: var(--gray);
-  font-weight: var(--font-weight-semibold);
-
-  & h1 {
-    border-bottom: 1px solid;
-    padding: var(--space-12);
-  }
-
-  &__labels {
-    color: var(--white) !important;
-  }
-
-  &__fields {
-    background: var(--black) !important;
-    color: var(--white) !important;
-    border: 0;
-
-    .anticon svg {
-      color: var(--white);
-    }
-  }
 }
 
 .content {
-  width: 100dvw;
+  width: 80dvw;
+}
+
+.ant-notification-notice-message {
+  display: block !important;
+  gap: 0 !important;
 }

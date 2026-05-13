@@ -1,0 +1,33 @@
+.sidebar {
+  .login {
+    &__labels {
+      font-weight: var(--font-weight-semibold);
+      color: var(--white) !important;
+    }
+
+    &__fields {
+      background: var(--black) !important;
+      color: var(--white) !important;
+      border: 0;
+
+      .anticon svg {
+        color: var(--white);
+      }
+    }
+  }
+
+  h1 {
+    border-bottom: 1px solid;
+    padding: var(--space-12);
+  }
+
+  Button {
+    box-shadow: var(--shadow) !important;
+    background: var(--black) !important;
+    margin-top: var(--space-20);
+
+    &:hover {
+      background: var(--hover) !important;
+    }
+  }
+}
