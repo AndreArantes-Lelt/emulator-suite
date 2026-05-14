@@ -3,8 +3,6 @@
   --black: #16171d;
   --gray: #2d2f3f;
 
-  --hover: #3d3d3f;
-
   --red-01: #4c0500;
   --red-02: #990a00;
   --red-03: #ff1100;
@@ -13,6 +11,15 @@
   --blue-02: #1f3283;
   --blue-03: #3354db;
 
+  --placeholder: #e0e3ec80;
+
+  --hover: #3d3d3f;
+  --white-hover: #747475;
+
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --white-shadow:
+    rgba(125, 125, 125, 0.1) 0 10px 15px -3px,
+    rgba(125, 125, 125, 0.05) 0 4px 6px -2px;
 }

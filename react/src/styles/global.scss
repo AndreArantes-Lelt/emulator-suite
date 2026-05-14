@@ -4,15 +4,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body,
 #root {
   margin: 0 auto;
   display: flex;
   overflow: hidden;
-}
-
-body {
-  margin: 0;
-  height: 0;
+  min-height: 100dvh;
 }
 
 .not-found {
@@ -28,8 +26,8 @@ body {
 
 .canva {
   width: 100dvw;
-  height: 100dvh;
   display: flex;
+  place-content: center;
   background: var(--black);
   color: var(--white);
   font-family: var(--font-family);
@@ -51,11 +49,25 @@ body {
   background: var(--gray);
 }
 
-.content {
+.main {
   width: 80dvw;
-}
+  display: flex;
+  flex-direction: column;
+  margin: var(--space-24);
 
-.ant-notification-notice-message {
-  display: block !important;
-  gap: 0 !important;
+  .ant-tabs-tab {
+    background: var(--gray) !important;
+  }
+  .ant-tabs-tab-active {
+    background: var(--black) !important;
+    border-bottom: 0 !important;
+  }
+  .ant-tabs-tab-btn {
+    color: var(--white) !important;
+  }
+
+  .ant-select-placeholder,
+  .ant-input::placeholder {
+    color: var(--placeholder);
+  }
 }

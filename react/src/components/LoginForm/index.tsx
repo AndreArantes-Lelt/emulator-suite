@@ -5,7 +5,7 @@ import useNotification from "../../hooks/useNotification";
 import "./styles.scss";
 
 function LoginForm() {
-  const [environment, setEnvironment] = useState<string>("HOM");
+  const [environment, setEnvironment] = useState<string | null>("HOM");
   const { openNotification, contextHolder } = useNotification();
 
   const onFinish: FormProps<Login>["onFinish"] = (values) => {
