@@ -1,16 +1,31 @@
 import { Form, type FormProps, Select, Input, Button } from "antd";
 import { type Login } from "../../types/Login";
+import { performLogin } from "../../services/login";
+import type { Env } from "../../types/Url";
+import { useAuth } from "../../context/authContext";
 import { useState } from "react";
-import useNotification from "../../hooks/useNotification";
+import { useNotification } from "../../context/notificationContext";
 import "./styles.scss";
 
-function LoginForm() {
-  const [environment, setEnvironment] = useState<string | null>("HOM");
-  const { openNotification, contextHolder } = useNotification();
+interface LoginFormProps {
+  setOpenSidebar: (isLogged: boolean) => void;
+}
 
-  const onFinish: FormProps<Login>["onFinish"] = (values) => {
-    console.log("Success:", values);
-    // TODO: call API here
+function LoginForm({ setOpenSidebar }: LoginFormProps) {
+  const [environment, setEnvironment] = useState<Env>("HOM");
+  const { openNotification } = useNotification();
+  const { setToken } = useAuth();
+
+  const onFinish: FormProps<Login>["onFinish"] = async (values) => {
+    const res = await performLogin(values as Login);
+
+    if (res.success) {
+      setToken(res.data?.token ?? null);
+      openNotification("success", { title: "Login realizado com sucesso!" });
+      setOpenSidebar(false);
+    } else {
+      openNotification("error", { title: "Erro!", description: res.message });
+    }
   };
 
   const onFinishFailed: FormProps<Login>["onFinishFailed"] = () => {
@@ -19,40 +34,37 @@ function LoginForm() {
     });
   };
 
+  const options: { label: string; value: Env }[] = [
+    { label: "HOM", value: "HOM" },
+    { label: "PROD", value: "PROD" },
+    { label: "DEV", value: "DEV" },
+  ];
+
   return (
-    <>
-      {contextHolder}
-      <h1>Login</h1>
-      <Form
+    <div className="login">
+      <p>Login</p>
+      <Form<Login>
         name="basic"
         layout="vertical"
         classNames={{ label: "login__labels" }}
-        initialValues={{ environment: "HOM" }}
+        initialValues={{ env: "HOM" as Env }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item
-          label="Ambiente"
-          name="environment"
-          rules={[{ required: true }]}
-        >
-          <Select
+        <Form.Item label="Ambiente" name="env" rules={[{ required: true }]}>
+          <Select<Env>
             classNames={{
               root: "login__fields",
               content: "login__fields",
             }}
             value={environment}
             onChange={(e) => setEnvironment(e)}
-            options={[
-              { label: "HOM", value: "HOM" },
-              { label: "PROD", value: "PROD" },
-              { label: "DEV", value: "DEV" },
-            ]}
+            options={options}
           />
         </Form.Item>
 
-        <Form.Item<Login>
+        <Form.Item
           label="Usuário"
           name="username"
           rules={[{ required: true, message: "Campo obrigatório" }]}
@@ -60,7 +72,7 @@ function LoginForm() {
           <Input className="login__fields" />
         </Form.Item>
 
-        <Form.Item<Login>
+        <Form.Item
           label="Senha"
           name="password"
           rules={[{ required: true, message: "Campo obrigatório" }]}
@@ -74,7 +86,7 @@ function LoginForm() {
           </Button>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 }
 

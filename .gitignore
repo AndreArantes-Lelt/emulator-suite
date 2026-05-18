@@ -4,7 +4,7 @@
 # Ignorar ambientes virtuais Python
 venv/
 .venv/
-env/
+.env
 
 # Ignorar arquivos de cache do Python
 __pycache__/
@@ -12,3 +12,6 @@ __pycache__/
 
 # packages
 node_modules/
+
+#example
+example/

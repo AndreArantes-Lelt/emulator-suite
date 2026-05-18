@@ -1,25 +1,24 @@
-.sidebar {
-  .login {
-    &__labels {
-      font-weight: var(--font-weight-semibold);
-      color: var(--white) !important;
-    }
-
-    &__fields {
-      width: 15dvw;
-      background: var(--black) !important;
-      color: var(--white) !important;
-      border: 0;
-
-      .anticon svg {
-        color: var(--white);
-      }
-    }
-  }
-
-  h1 {
+.login {
+  p {
+    font-size: var(--font-heading-md-size);
+    font-weight: var(--font-heading-weight);
     border-bottom: 1px solid;
     padding: var(--space-12);
+  }
+
+  &__labels {
+    font-weight: var(--font-weight-semibold);
+    color: var(--white) !important;
+  }
+
+  &__fields {
+    background: var(--black) !important;
+    color: var(--white) !important;
+    border: 0;
+
+    .anticon svg {
+      color: var(--white);
+    }
   }
 
   Button {

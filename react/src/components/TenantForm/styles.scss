@@ -1,34 +1,22 @@
-.main {
-  .tenant {
+.tenant {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-20);
+  gap: var(--space-20);
+  place-self: baseline;
+
+  &__search {
     display: flex;
-    flex-direction: column;
-    padding: var(--space-20);
     gap: var(--space-20);
-    place-self: baseline;
-
-    &__search {
-      display: flex;
-      gap: var(--space-20);
-    }
-
-    &__fields {
-      background: var(--gray) !important;
-      color: var(--white) !important;
-      border: 0;
-
-      .anticon svg {
-        color: var(--white);
-      }
-    }
   }
 
-  Button {
+  &__fields {
     background: var(--gray) !important;
     color: var(--white) !important;
-    box-shadow: var(--white-shadow) !important;
+    border: 0;
 
-    &:hover {
-      background: var(--white-hover) !important;
+    .anticon svg {
+      color: var(--white);
     }
   }
 }

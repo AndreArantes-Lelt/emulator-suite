@@ -1,5 +1,4 @@
 import TenantForm from "../../../components/TenantForm";
-import "./styles.scss";
 
 function OTDRTab() {
   return (

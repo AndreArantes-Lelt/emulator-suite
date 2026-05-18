@@ -1,0 +1,28 @@
+import type { Env, UrlSet } from "../types/Url";
+
+const getEnvVar = (key: string): string | undefined => {
+  const env = (import.meta as any).env ?? {};
+  const raw = env[key] ?? undefined;
+
+  if (typeof raw !== "string") return undefined;
+  return raw.replace(/^"(.*)"$/, "$1").trim();
+};
+
+const buildUrlSet = (env: Env): UrlSet => {
+  const make = (k: keyof UrlSet) => {
+    const val = getEnvVar(`VITE_${env}_${k}`);
+    if (!val) throw new Error(`Missing env var VITE_${env}_${k}`);
+    return val;
+  };
+
+  return {
+    AUTH_PROJ: make("AUTH_PROJ"),
+    SENSOR_ALARM: make("SENSOR_ALARM"),
+    WEBHOOK_ONU: make("WEBHOOK_ONU"),
+    ONU_SEARCH_BASE: make("ONU_SEARCH_BASE"),
+    OTDR_LIST: make("OTDR_LIST"),
+    OTDR_ALARM_BASE: make("OTDR_ALARM_BASE"),
+  };
+};
+
+export const getUrls = (env: Env): UrlSet => buildUrlSet(env);

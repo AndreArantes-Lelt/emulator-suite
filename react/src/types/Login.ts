@@ -1,5 +1,7 @@
+import type { Env } from "../types/Url";
+
 export interface Login {
-  environment: string;
-  username?: string;
-  password?: string;
+  env: Env;
+  username: string;
+  password: string;
 }

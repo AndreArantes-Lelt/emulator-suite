@@ -1,12 +1,26 @@
+import { Select } from "antd";
+import { useState } from "react";
 import TenantForm from "../../../components/TenantForm";
-import "./styles.scss";
 
 function SensorTab() {
+  const [sensors, setSensors] = useState<string[] | null>();
+
   return (
     <>
       <TenantForm />
       <div className="data">
-        <p>Sensor</p>
+        <p>Sensores a serem alarmados:</p>
+        <Select
+          classNames={{
+            root: "data__fields",
+            content: "data__fields",
+          }}
+          mode="multiple"
+          style={{ width: "60%" }}
+          value={sensors}
+          onChange={(e) => setSensors(e)}
+          // options={}
+        />
       </div>
     </>
   );

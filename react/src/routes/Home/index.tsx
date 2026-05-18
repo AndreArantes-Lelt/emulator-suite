@@ -1,63 +1,71 @@
-import { GearIcon, WarningIcon } from "@phosphor-icons/react";
+import {
+  GearIcon,
+  ArrowLineLeftIcon,
+  ArrowLineRightIcon,
+} from "@phosphor-icons/react";
 import { useState } from "react";
-import { Tabs, type TabsProps, Button, Modal } from "antd";
+import { Tabs, type TabsProps, Button, Dropdown } from "antd";
 import LoginForm from "../../components/LoginForm";
 import SensorTab from "../Tabs/Sensor";
 import ONUTab from "../Tabs/ONU";
 import OTDRTab from "../Tabs/OTDR";
 
 function Home() {
-  const [isError, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const actions = (
-    <Button>
-      <GearIcon size={20} />
-    </Button>
-  );
+  const [isSidebarOpen, setOpenSidebar] = useState(true);
 
   const items: TabsProps["items"] = [
     {
-      key: "1",
+      key: "SENSOR",
       label: "SENSOR",
       children: <SensorTab />,
     },
     {
-      key: "2",
+      key: "ONU",
       label: "ONU",
       children: <ONUTab />,
     },
     {
-      key: "3",
+      key: "OTDR",
       label: "OTDR",
       children: <OTDRTab />,
     },
   ];
 
-  const handleCloseModal = () => {
-    setError(false);
+  const handleOpenSidebar = (open: boolean) => {
+    setOpenSidebar(open);
   };
 
   return (
     <section className="canva">
-      <div className="sidebar">
-        <LoginForm />
-      </div>
+      {isSidebarOpen ? (
+        <div className="sidebar">
+          <Button onClick={() => handleOpenSidebar(false)}>
+            <ArrowLineLeftIcon size={20} />
+          </Button>
+
+          <LoginForm setOpenSidebar={handleOpenSidebar} />
+        </div>
+      ) : (
+        <div className="sidebar--closed">
+          <Button onClick={() => handleOpenSidebar(true)}>
+            <ArrowLineRightIcon size={20} />
+          </Button>
+        </div>
+      )}
 
       <div className="main">
         <Tabs
           type="card"
           size="large"
-          tabBarExtraContent={actions}
-          defaultActiveKey="1"
           items={items}
+          tabBarExtraContent={
+            <Dropdown>
+              <GearIcon size={20} />
+            </Dropdown>
+          }
+          defaultActiveKey="SENSOR"
         />
       </div>
-
-      <Modal open={isError} onOk={handleCloseModal} onCancel={handleCloseModal}>
-        <WarningIcon size={30} />
-        <p>{errorMessage}</p>
-      </Modal>
     </section>
   );
 }

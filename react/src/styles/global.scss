@@ -39,18 +39,47 @@ body,
 }
 
 .sidebar {
-  display: flex;
+  position: relative;
   flex-direction: column;
   place-content: center;
   place-items: center;
   text-align: center;
-  width: 20dvw;
+  width: 30dvw;
   padding: var(--space-20);
   background: var(--gray);
+
+  > Button {
+    position: absolute;
+    top: var(--space-16);
+    right: var(--space-16);
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: var(--border-10);
+    background: 0;
+    color: var(--white);
+    border: none;
+  }
+
+  &--closed {
+    display: flex;
+    margin-top: var(--space-8);
+    margin-left: var(--space-8);
+
+    > Button {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border-radius: var(--border-10);
+      background: 0;
+      color: var(--white);
+      border: none;
+    }
+  }
 }
 
 .main {
-  width: 80dvw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin: var(--space-24);
@@ -69,5 +98,33 @@ body,
   .ant-select-placeholder,
   .ant-input::placeholder {
     color: var(--placeholder);
+  }
+
+  .data {
+    padding: var(--space-20);
+
+    p {
+      color: var(--white);
+    }
+
+    &__fields {
+      background: var(--gray) !important;
+      color: var(--white) !important;
+      border: 0;
+
+      .anticon svg {
+        color: var(--white);
+      }
+    }
+  }
+
+  Button {
+    background: var(--gray) !important;
+    color: var(--white) !important;
+    box-shadow: var(--white-shadow) !important;
+
+    &:hover {
+      background: var(--white-hover) !important;
+    }
   }
 }
