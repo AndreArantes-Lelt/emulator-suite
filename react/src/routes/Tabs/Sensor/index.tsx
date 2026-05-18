@@ -1,13 +1,13 @@
 import { Select } from "antd";
 import { useState } from "react";
-import TenantForm from "../../../components/TenantForm";
+import ProjectSelect from "../../../components/ProjectSelect";
 
 function SensorTab() {
   const [sensors, setSensors] = useState<string[] | null>();
 
   return (
     <>
-      <TenantForm />
+      <ProjectSelect />
       <div className="data">
         <p>Sensores a serem alarmados:</p>
         <Select

@@ -14,12 +14,13 @@ interface LoginFormProps {
 function LoginForm({ setOpenSidebar }: LoginFormProps) {
   const [environment, setEnvironment] = useState<Env>("HOM");
   const { openNotification } = useNotification();
-  const { setToken } = useAuth();
+  const { setEnv, setToken } = useAuth();
 
-  const onFinish: FormProps<Login>["onFinish"] = async (values) => {
-    const res = await performLogin(values as Login);
+  const onFinish: FormProps<Login>["onFinish"] = async (values: Login) => {
+    const res = await performLogin(values);
 
     if (res.success) {
+      setEnv(values.env);
       setToken(res.data?.token ?? null);
       openNotification("success", { title: "Login realizado com sucesso!" });
       setOpenSidebar(false);

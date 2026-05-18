@@ -1,9 +1,9 @@
-import TenantForm from "../../../components/TenantForm";
+import ProjectSelect from "../../../components/ProjectSelect";
 
 function ONUTab() {
   return (
     <>
-      <TenantForm />
+      <ProjectSelect />
       <div className="data">
         <p>ONU</p>
       </div>

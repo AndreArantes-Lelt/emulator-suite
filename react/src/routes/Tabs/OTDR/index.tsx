@@ -1,9 +1,9 @@
-import TenantForm from "../../../components/TenantForm";
+import ProjectSelect from "../../../components/ProjectSelect";
 
 function OTDRTab() {
   return (
     <>
-      <TenantForm />
+      <ProjectSelect />
       <div className="data">
         <p>OTDR</p>
       </div>
