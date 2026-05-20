@@ -107,13 +107,31 @@ body,
       color: var(--white);
     }
 
+    &__alarm {
+      display: flex;
+      place-items: center;
+      gap: var(--space-20);
+
+      > Button {
+        background: var(--red-02) !important;
+
+        &:hover {
+          background: var(--red-03) !important;
+        }
+      }
+    }
+
     &__fields {
       background: var(--gray) !important;
       color: var(--white) !important;
+      padding: var(--space-4);
       border: 0;
 
       .anticon svg {
         color: var(--white);
+      }
+      .ant-select-selection-item {
+        background: var(--black) !important;
       }
     }
   }

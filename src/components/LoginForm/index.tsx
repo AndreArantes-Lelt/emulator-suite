@@ -1,8 +1,9 @@
+import { CircleNotchIcon } from "@phosphor-icons/react";
 import { Form, type FormProps, Select, Input, Button } from "antd";
-import { type Login } from "../../types/Login";
 import { performLogin } from "../../services/login";
-import type { Env } from "../../types/Url";
-import { useAuth } from "../../context/authContext";
+import type { Login } from "../../types/Login";
+import type { Env } from "../../types/Tenant";
+import { useApp } from "../../context/appContext";
 import { useState } from "react";
 import { useNotification } from "../../context/notificationContext";
 import "./styles.scss";
@@ -13,8 +14,9 @@ interface LoginFormProps {
 
 function LoginForm({ setOpenSidebar }: LoginFormProps) {
   const [environment, setEnvironment] = useState<Env>("HOM");
+  const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
-  const { setEnv, setToken } = useAuth();
+  const { setEnv, setToken } = useApp();
 
   const onFinish: FormProps<Login>["onFinish"] = async (values: Login) => {
     const res = await performLogin(values);
@@ -23,9 +25,11 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
       setEnv(values.env);
       setToken(res.data?.token ?? null);
       openNotification("success", { title: "Login realizado com sucesso!" });
+      setLoading(false);
       setOpenSidebar(false);
     } else {
       openNotification("error", { title: "Erro!", description: res.message });
+      setLoading(false);
     }
   };
 
@@ -33,6 +37,7 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
     openNotification("warning", {
       title: "Por favor, preencha todos os campos obrigatórios",
     });
+    setLoading(false);
   };
 
   const options: { label: string; value: Env }[] = [
@@ -82,9 +87,24 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
         </Form.Item>
 
         <Form.Item label={null}>
-          <Button type="primary" htmlType="submit">
-            Login
-          </Button>
+          {isLoading ? (
+            <Button
+              loading
+              iconPlacement={"end"}
+              type="primary"
+              htmlType="submit"
+            >
+              Login
+            </Button>
+          ) : (
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={() => setLoading(true)}
+            >
+              Login
+            </Button>
+          )}
         </Form.Item>
       </Form>
     </div>

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
-import { AuthProvider } from "./context/authContext";
+import { AppProvider } from "./context/appContext";
 import { NotificationProvider } from "./context/notificationContext";
 import Home from "./routes/Home";
 import NotFound from "./routes/NotFound";
@@ -18,9 +18,9 @@ function App() {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <AuthProvider>
+  <AppProvider>
     <NotificationProvider>
       <App />
     </NotificationProvider>
-  </AuthProvider>,
+  </AppProvider>,
 );

@@ -1,13 +1,9 @@
-import {
-  GearIcon,
-  ArrowLineLeftIcon,
-  ArrowLineRightIcon,
-} from "@phosphor-icons/react";
+import { ArrowLineLeftIcon, ArrowLineRightIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { Tabs, type TabsProps, Button, Dropdown } from "antd";
+import { Tabs, type TabsProps, Button } from "antd";
 import LoginForm from "../../components/LoginForm";
+import ProjectSelect from "../../components/ProjectSelect";
 import SensorTab from "../Tabs/Sensor";
-import ONUTab from "../Tabs/ONU";
 import OTDRTab from "../Tabs/OTDR";
 
 function Home() {
@@ -20,49 +16,36 @@ function Home() {
       children: <SensorTab />,
     },
     {
-      key: "ONU",
-      label: "ONU",
-      children: <ONUTab />,
-    },
-    {
       key: "OTDR",
       label: "OTDR",
       children: <OTDRTab />,
     },
   ];
 
-  const handleOpenSidebar = (open: boolean) => {
-    setOpenSidebar(open);
-  };
-
   return (
     <section className="canva">
       {isSidebarOpen ? (
         <div className="sidebar">
-          <Button onClick={() => handleOpenSidebar(false)}>
+          <Button onClick={() => setOpenSidebar(false)}>
             <ArrowLineLeftIcon size={20} />
           </Button>
 
-          <LoginForm setOpenSidebar={handleOpenSidebar} />
+          <LoginForm setOpenSidebar={setOpenSidebar} />
         </div>
       ) : (
         <div className="sidebar--closed">
-          <Button onClick={() => handleOpenSidebar(true)}>
+          <Button onClick={() => setOpenSidebar(true)}>
             <ArrowLineRightIcon size={20} />
           </Button>
         </div>
       )}
 
       <div className="main">
+        <ProjectSelect />
         <Tabs
           type="card"
           size="large"
           items={items}
-          tabBarExtraContent={
-            <Dropdown>
-              <GearIcon size={20} />
-            </Dropdown>
-          }
           defaultActiveKey="SENSOR"
         />
       </div>

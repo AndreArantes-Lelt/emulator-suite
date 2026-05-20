@@ -1,7 +1,6 @@
 import type { Login } from "../types/Login";
+import type { ApiResult } from "../types/Utils";
 import { getUrls } from "./url";
-
-type ApiResult<T> = { success: boolean; data?: T; message?: string };
 
 export async function performLogin({
   env,
@@ -18,13 +17,13 @@ export async function performLogin({
 
   if (!response.ok) {
     const text = await response.text();
-    return { success: false, message: `Erro ${response.status}: ${text}` };
+    return { success: false, message: `${response.status}: ${text}` };
   }
 
   const body = await response.json();
   const token = body.id_token;
   if (!token) {
-    return { success: false, message: "Token não retornado" };
+    return { success: false, message: "token não retornado" };
   }
 
   return { success: true, data: { token } };

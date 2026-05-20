@@ -1,4 +1,4 @@
-import type { Env, UrlSet } from "../types/Url";
+import type { Env, UrlSet } from "../types/Utils";
 
 const getEnvVar = (key: string): string | undefined => {
   const env = (import.meta as any).env ?? {};

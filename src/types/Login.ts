@@ -1,4 +1,4 @@
-import type { Env } from "../types/Url";
+import type { Env } from "./Tenant";
 
 export interface Login {
   env: Env;

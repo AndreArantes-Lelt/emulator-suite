@@ -1,11 +1,12 @@
-.tenant {
+.project {
   display: flex;
   flex-direction: column;
+  place-self: baseline;
   padding: var(--space-20);
   gap: var(--space-20);
-  place-self: baseline;
+  margin-bottom: var(--space-16);
 
-  &__search {
+  &__tenant {
     display: flex;
     gap: var(--space-20);
   }

@@ -1,19 +1,22 @@
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { Input, Button, Select } from "antd";
+import { useState } from "react";
 import { getProjects } from "../../services/projects";
-import { useAuth } from "../../context/authContext";
+import { useApp } from "../../context/appContext";
 import { useNotification } from "../../context/notificationContext";
 import "./styles.scss";
 
+type ProjectOptions = { value: string; label: string };
+
 function ProjectSelect() {
+  const [projectOptions, setProjectOptions] = useState<ProjectOptions[]>();
   const { openNotification } = useNotification();
-  const { env, token } = useAuth();
+  const { env, token, setTenantId, setProjectId } = useApp();
 
   const handleProjects = async () => {
-    const data = document.getElementById(
-      "tenant_id",
-    ) as HTMLInputElement | null;
-    const tenantId = data?.value?.trim();
+    const data = document.getElementById("tenant_id") as HTMLInputElement;
+    const tenantId = data.value.trim();
+    setTenantId(tenantId);
 
     if (!token) {
       openNotification("error", { title: "Você precisa estar logado" });
@@ -27,27 +30,28 @@ function ProjectSelect() {
 
     const res = await getProjects({
       env,
-      tenantId,
       token,
+      tenantId,
     });
 
-    if (res) {
-      console.log("Success");
+    if (res.success) {
+      const options = (res.data ?? []).map((project) => ({
+        value: project.id,
+        label: project.name,
+      }));
+      setProjectOptions(options);
     } else {
-      openNotification("error", {
-        title: "Erro!",
-        description: "Não foi possivel recuperar os projetos.",
-      });
+      openNotification("error", { title: "Erro!", description: res.message });
     }
   };
 
   return (
-    <div className="tenant">
-      <div className="tenant__search">
+    <div className="project">
+      <div className="project__tenant">
         <Input
           placeholder="Tenant ID"
           id="tenant_id"
-          className="tenant__fields"
+          className="project__fields"
         />
 
         <Button onClick={() => handleProjects()}>
@@ -58,10 +62,11 @@ function ProjectSelect() {
       <Select
         placeholder="Projeto"
         classNames={{
-          root: "tenant__fields",
-          content: "tenant__fields",
+          root: "project__fields",
+          content: "project__fields",
         }}
-        // options={}
+        options={projectOptions}
+        onSelect={(e) => setProjectId(e)}
       ></Select>
     </div>
   );

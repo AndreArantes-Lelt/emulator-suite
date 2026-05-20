@@ -1,4 +1,4 @@
-export type Env = "HOM" | "DEV" | "PROD";
+export type ApiResult<T> = { success: boolean; data?: T; message?: string };
 
 export type UrlSet = {
   AUTH_PROJ: string;
