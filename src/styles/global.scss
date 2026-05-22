@@ -101,19 +101,23 @@ body,
   }
 
   .data {
-    padding: var(--space-20);
+    padding: var(--space-12);
 
     p {
       color: var(--white);
     }
 
+    &__select {
+      margin-bottom: var(--space-20);
+    }
+
     &__alarm {
       display: flex;
-      place-items: center;
       gap: var(--space-20);
 
       > Button {
         background: var(--red-02) !important;
+        width: 50px;
 
         &:hover {
           background: var(--red-03) !important;
@@ -124,7 +128,6 @@ body,
     &__fields {
       background: var(--gray) !important;
       color: var(--white) !important;
-      padding: var(--space-4);
       border: 0;
 
       .anticon svg {

@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, CaretDownIcon } from "@phosphor-icons/react";
 import { Input, Button, Select } from "antd";
 import { useState } from "react";
 import { getProjects } from "../../services/projects";
@@ -10,14 +10,11 @@ type ProjectOptions = { value: string; label: string };
 
 function ProjectSelect() {
   const [projectOptions, setProjectOptions] = useState<ProjectOptions[]>();
+  const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
-  const { env, token, setTenantId, setProjectId } = useApp();
+  const { env, token, tenantId, setTenantId, setProjectId } = useApp();
 
   const handleProjects = async () => {
-    const data = document.getElementById("tenant_id") as HTMLInputElement;
-    const tenantId = data.value.trim();
-    setTenantId(tenantId);
-
     if (!token) {
       openNotification("error", { title: "Você precisa estar logado" });
       return;
@@ -27,6 +24,9 @@ function ProjectSelect() {
       openNotification("warning", { title: "Informe o tenant id" });
       return;
     }
+
+    setLoading(true);
+    setTenantId(tenantId);
 
     const res = await getProjects({
       env,
@@ -40,8 +40,11 @@ function ProjectSelect() {
         label: project.name,
       }));
       setProjectOptions(options);
+      setLoading(false);
     } else {
       openNotification("error", { title: "Erro!", description: res.message });
+      setProjectOptions([]);
+      setLoading(false);
     }
   };
 
@@ -50,12 +53,12 @@ function ProjectSelect() {
       <div className="project__tenant">
         <Input
           placeholder="Tenant ID"
-          id="tenant_id"
           className="project__fields"
+          onChange={(e) => setTenantId(e.target.value)}
         />
 
-        <Button onClick={() => handleProjects()}>
-          <MagnifyingGlassIcon size={20} />
+        <Button loading={isLoading} onClick={() => handleProjects()}>
+          {!isLoading && <MagnifyingGlassIcon size={20} />}
         </Button>
       </div>
 
@@ -65,8 +68,12 @@ function ProjectSelect() {
           root: "project__fields",
           content: "project__fields",
         }}
+        suffixIcon={
+          <CaretDownIcon size={20} style={{ color: "var(--white)" }} />
+        }
+        disabled={!tenantId}
         options={projectOptions}
-        onSelect={(e) => setProjectId(e)}
+        onChange={(e) => setProjectId(e)}
       ></Select>
     </div>
   );

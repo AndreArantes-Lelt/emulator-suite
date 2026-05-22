@@ -1,16 +1,28 @@
-import type { Tenant } from "../types/Tenant";
+import type { TenantParams } from "../types/Tenant";
 import type { ApiResult } from "../types/Utils";
 import type { Env } from "../types/Tenant";
 import { getUrls } from "./url";
 
-type Sensor = Array<{ id: string; name: string; type: "REDE" | "UUID" }>;
+export type SensorParams = {
+  env: Env;
+  token: string;
+  tenantId: string;
+  devEui: string;
+  cause: string;
+};
+
+type SensorsReponse = Array<{
+  id: string;
+  name: string;
+  type: "REDE" | "UUID";
+}>;
 
 export async function getSensorsFromProject({
   env,
   token,
   tenantId,
   projectId,
-}: Tenant): Promise<ApiResult<Sensor>> {
+}: TenantParams): Promise<ApiResult<SensorsReponse>> {
   const urls = getUrls(env);
   const response = await fetch(
     `${urls.SENSOR_ALARM}/companies/${tenantId}/${projectId}/devices?limit=100`,
@@ -58,13 +70,13 @@ export async function getSensorsFromProject({
   };
 }
 
-export async function sendSensorAlarm(
-  env: Env,
-  token: string,
-  tenantId: string,
-  devEui: string,
-  cause: string,
-): Promise<ApiResult<{ status: number }>> {
+export async function sendSensorAlarm({
+  env,
+  token,
+  tenantId,
+  devEui,
+  cause,
+}: SensorParams): Promise<ApiResult<{}>> {
   const urls = getUrls(env);
   const url = `${urls.SENSOR_ALARM}/companies/${tenantId}/uplink_emulator/${encodeURIComponent(
     devEui.trim(),

@@ -1,6 +1,7 @@
 import { ArrowLineLeftIcon, ArrowLineRightIcon } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, type TabsProps, Button } from "antd";
+import { useApp } from "../../context/appContext";
 import LoginForm from "../../components/LoginForm";
 import ProjectSelect from "../../components/ProjectSelect";
 import SensorTab from "../Tabs/Sensor";
@@ -8,6 +9,11 @@ import OTDRTab from "../Tabs/OTDR";
 
 function Home() {
   const [isSidebarOpen, setOpenSidebar] = useState(true);
+  const { clearSession } = useApp();
+
+  useEffect(() => {
+    clearSession();
+  }, []);
 
   const items: TabsProps["items"] = [
     {
@@ -44,7 +50,7 @@ function Home() {
         <ProjectSelect />
         <Tabs
           type="card"
-          size="large"
+          size="medium"
           items={items}
           defaultActiveKey="SENSOR"
         />

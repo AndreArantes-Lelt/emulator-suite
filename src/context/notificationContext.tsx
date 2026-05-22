@@ -12,9 +12,7 @@ type NotificationContextType = {
   openNotification: (type: NotificationType, props: NotificationProps) => void;
 };
 
-const NotificationContext = createContext<NotificationContextType | undefined>(
-  undefined,
-);
+const NotificationContext = createContext<NotificationContextType | null>(null);
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [api, contextHolder] = notification.useNotification();

@@ -1,12 +1,18 @@
-import type { Login } from "../types/Login";
+import type { Env } from "../types/Tenant";
 import type { ApiResult } from "../types/Utils";
 import { getUrls } from "./url";
+
+export type LoginParams = {
+  env: Env;
+  username: string;
+  password: string;
+};
 
 export async function performLogin({
   env,
   username,
   password,
-}: Login): Promise<ApiResult<{ token: string }>> {
+}: LoginParams): Promise<ApiResult<{ token: string }>> {
   const urls = getUrls(env);
   const urlAuth = `${urls.AUTH_PROJ}/auth/`;
   const response = await fetch(urlAuth, {
@@ -23,7 +29,7 @@ export async function performLogin({
   const body = await response.json();
   const token = body.id_token;
   if (!token) {
-    return { success: false, message: "token não retornado" };
+    return { success: false, message: "nome e/ou senha incorretos" };
   }
 
   return { success: true, data: { token } };

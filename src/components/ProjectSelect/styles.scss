@@ -9,6 +9,10 @@
   &__tenant {
     display: flex;
     gap: var(--space-20);
+
+    > Button {
+      width: 50px;
+    }
   }
 
   &__fields {

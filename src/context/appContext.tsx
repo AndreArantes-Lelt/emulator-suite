@@ -10,6 +10,7 @@ type AppContextType = {
   setToken: (token: string | null) => void;
   setTenantId: (token: string | null) => void;
   setProjectId: (token: string | null) => void;
+  clearSession: () => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -51,6 +52,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     else localStorage.removeItem("appProjectId");
   }, [projectId]);
 
+  const clearSession = () => {
+    setEnv("HOM");
+    setToken(null);
+    setTenantId(null);
+    setProjectId(null);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -62,6 +70,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         setToken,
         setTenantId,
         setProjectId,
+        clearSession,
       }}
     >
       {children}

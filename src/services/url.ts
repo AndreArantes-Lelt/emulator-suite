@@ -1,4 +1,5 @@
-import type { Env, UrlSet } from "../types/Utils";
+import type { Env } from "../types/Tenant";
+import type { UrlOptions } from "../types/Utils";
 
 const getEnvVar = (key: string): string | undefined => {
   const env = (import.meta as any).env ?? {};
@@ -8,8 +9,8 @@ const getEnvVar = (key: string): string | undefined => {
   return raw.replace(/^"(.*)"$/, "$1").trim();
 };
 
-const buildUrlSet = (env: Env): UrlSet => {
-  const make = (k: keyof UrlSet) => {
+const buildUrlSet = (env: Env): UrlOptions => {
+  const make = (k: keyof UrlOptions) => {
     const val = getEnvVar(`VITE_${env}_${k}`);
     if (!val) throw new Error(`Missing env var VITE_${env}_${k}`);
     return val;
@@ -25,4 +26,4 @@ const buildUrlSet = (env: Env): UrlSet => {
   };
 };
 
-export const getUrls = (env: Env): UrlSet => buildUrlSet(env);
+export const getUrls = (env: Env): UrlOptions => buildUrlSet(env);

@@ -1,7 +1,6 @@
-import { CircleNotchIcon } from "@phosphor-icons/react";
+import { CaretDownIcon } from "@phosphor-icons/react";
 import { Form, type FormProps, Select, Input, Button } from "antd";
-import { performLogin } from "../../services/login";
-import type { Login } from "../../types/Login";
+import { type LoginParams, performLogin } from "../../services/login";
 import type { Env } from "../../types/Tenant";
 import { useApp } from "../../context/appContext";
 import { useState } from "react";
@@ -13,12 +12,13 @@ interface LoginFormProps {
 }
 
 function LoginForm({ setOpenSidebar }: LoginFormProps) {
-  const [environment, setEnvironment] = useState<Env>("HOM");
   const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
   const { setEnv, setToken } = useApp();
 
-  const onFinish: FormProps<Login>["onFinish"] = async (values: Login) => {
+  const onFinish: FormProps<LoginParams>["onFinish"] = async (
+    values: LoginParams,
+  ) => {
     const res = await performLogin(values);
 
     if (res.success) {
@@ -33,7 +33,7 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
     }
   };
 
-  const onFinishFailed: FormProps<Login>["onFinishFailed"] = () => {
+  const onFinishFailed: FormProps<LoginParams>["onFinishFailed"] = () => {
     openNotification("warning", {
       title: "Por favor, preencha todos os campos obrigatórios",
     });
@@ -49,7 +49,7 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
   return (
     <div className="login">
       <p>Login</p>
-      <Form<Login>
+      <Form<LoginParams>
         name="basic"
         layout="vertical"
         classNames={{ label: "login__labels" }}
@@ -64,8 +64,9 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
               root: "login__fields",
               content: "login__fields",
             }}
-            value={environment}
-            onChange={(e) => setEnvironment(e)}
+            suffixIcon={
+              <CaretDownIcon size={20} style={{ color: "var(--white)" }} />
+            }
             options={options}
           />
         </Form.Item>
@@ -87,24 +88,15 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
         </Form.Item>
 
         <Form.Item label={null}>
-          {isLoading ? (
-            <Button
-              loading
-              iconPlacement={"end"}
-              type="primary"
-              htmlType="submit"
-            >
-              Login
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              htmlType="submit"
-              onClick={() => setLoading(true)}
-            >
-              Login
-            </Button>
-          )}
+          <Button
+            loading={isLoading}
+            iconPlacement={"end"}
+            type="primary"
+            htmlType="submit"
+            onClick={() => setLoading(true)}
+          >
+            Login
+          </Button>
         </Form.Item>
       </Form>
     </div>
