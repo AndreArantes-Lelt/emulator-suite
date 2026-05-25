@@ -1,19 +1,30 @@
-import { CaretDownIcon, SirenIcon } from "@phosphor-icons/react";
-import { Select, Button } from "antd";
+import { SirenIcon, ArrowsClockwiseIcon } from "@phosphor-icons/react";
+import { Button, Checkbox, InputNumber } from "antd";
+import Select from "../../../components/Select";
 import { useState, useEffect } from "react";
 import { useApp } from "../../../context/appContext";
 import { useNotification } from "../../../context/notificationContext";
+import type { Options } from "../../../types/Utils";
+import type { SensorCauses } from "../../../types/Causes";
 import {
   type SensorParams,
   getSensorsFromProject,
   sendSensorAlarm,
 } from "../../../services/sensor";
 
-type SensorOptions = { value: string; label: string };
+const causes: Options<SensorCauses>[] = [
+  { label: "Keep alive", value: "KEEP_ALIVE" },
+  { label: "Potencia ótica", value: "OPTICAL_POWER_ALERT" },
+  { label: "Temperatura", value: "TEMPERATURE_ALERT" },
+  { label: "Bateria", value: "BATTERY_ALERT" },
+];
 
 function SensorTab() {
-  const [sensors, setSensors] = useState<SensorOptions[]>();
+  const [sensors, setSensors] = useState<Options<string>[]>();
   const [selectedSensors, setSelectedSensors] = useState<string[]>();
+  const [selectedCause, setSelectedCause] = useState<SensorCauses>("KEEP_ALIVE");
+  const [isPayloadLoop, setPayloadLoop] = useState(false);
+  const [isLoadingSensors, setLoadingSensors] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
   const { env, token, tenantId, projectId } = useApp();
@@ -22,6 +33,9 @@ function SensorTab() {
     if (!token || !tenantId || !projectId) return;
 
     (async () => {
+      setLoadingSensors(true);
+      setSelectedSensors([]);
+
       const res = await getSensorsFromProject({
         env,
         token,
@@ -38,6 +52,8 @@ function SensorTab() {
       } else {
         openNotification("error", { title: "Erro!", description: res.message });
       }
+
+      setLoadingSensors(false);
     })();
   }, [projectId]);
 
@@ -50,14 +66,13 @@ function SensorTab() {
     }
     setLoading(true);
 
-    // TODO: get choosen cause
     const promises = selectedSensors.map(async (sensorId) => {
       const sensor: SensorParams = {
         env,
         token,
         tenantId,
         devEui: sensorId,
-        cause: "BATTERY_ALERT",
+        cause: selectedCause,
       };
 
       return await sendSensorAlarm(sensor);
@@ -86,47 +101,59 @@ function SensorTab() {
   return (
     <>
       <div className="data">
+        <p>Sensores a serem alarmados:</p>
         <div className="data__select">
-          <p>Sensores a serem alarmados:</p>
           <Select
-            classNames={{
-              root: "data__fields",
-              content: "data__fields",
-            }}
-            suffixIcon={
-              <CaretDownIcon size={20} style={{ color: "var(--white)" }} />
-            }
-            disabled={!projectId}
             style={{ width: "60%" }}
             mode="multiple"
-            showSearch={false}
+            loading={isLoadingSensors}
+            disabled={!projectId}
+            value={selectedSensors}
             options={sensors}
             onChange={(e) => setSelectedSensors(e)}
           />
-          <p>Causa:</p>
         </div>
 
+        <p>Causa:</p>
         <div className="data__alarm">
           <Select
-            classNames={{
-              root: "data__fields",
-              content: "data__fields",
-            }}
-            suffixIcon={
-              <CaretDownIcon size={20} style={{ color: "var(--white)" }} />
-            }
-            disabled={!projectId}
             style={{ width: "35%" }}
+            disabled={selectedSensors?.length === 0}
+            value={selectedCause}
+            options={causes}
+            onChange={(e: SensorCauses) => setSelectedCause(e)}
           />
 
-          <Button
-            loading={isLoading}
-            disabled={!projectId}
-            onClick={() => handleAlarm()}
-          >
+          <Button loading={isLoading} disabled={!projectId} onClick={() => handleAlarm()}>
             {!isLoading && <SirenIcon size={20} />}
           </Button>
         </div>
+
+        <Checkbox
+          classNames={{
+            root: "checkbox",
+            label: "checkbox__label",
+          }}
+          onChange={(e) => setPayloadLoop(e.target.checked)}
+        >
+          <ArrowsClockwiseIcon weight="bold" size={20} />
+          Teste de carga (Loop)
+        </Checkbox>
+
+        {isPayloadLoop && (
+          <div className="data__loop">
+            <InputNumber
+              className="data__fields"
+              mode="spinner"
+              placeholder="Repetições"
+            />
+            <InputNumber
+              classNames={{ root: "data__fields" }}
+              mode="spinner"
+              placeholder="Delay entre payloads"
+            />
+          </div>
+        )}
       </div>
     </>
   );

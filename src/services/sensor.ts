@@ -90,10 +90,8 @@ export async function sendSensorAlarm({
   });
 
   if (!response.ok) {
-    const text = await response.text();
     return {
       success: false,
-      message: `${response.status}: ${text}`,
     };
   }
 

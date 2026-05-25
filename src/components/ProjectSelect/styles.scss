@@ -11,7 +11,7 @@
     gap: var(--space-20);
 
     > Button {
-      width: 50px;
+      min-width: 50px;
     }
   }
 

@@ -1,7 +1,8 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
-import { Form, type FormProps, Select, Input, Button } from "antd";
+import { Form, type FormProps, Input, Button } from "antd";
+import Select from "../Select";
 import { type LoginParams, performLogin } from "../../services/login";
 import type { Env } from "../../types/Tenant";
+import type { Options } from "../../types/Utils";
 import { useApp } from "../../context/appContext";
 import { useState } from "react";
 import { useNotification } from "../../context/notificationContext";
@@ -11,26 +12,30 @@ interface LoginFormProps {
   setOpenSidebar: (isLogged: boolean) => void;
 }
 
+const options: Options<Env>[] = [
+  { label: "HOM", value: "HOM" },
+  { label: "PROD", value: "PROD" },
+  { label: "DEV", value: "DEV" },
+];
+
 function LoginForm({ setOpenSidebar }: LoginFormProps) {
   const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
   const { setEnv, setToken } = useApp();
 
-  const onFinish: FormProps<LoginParams>["onFinish"] = async (
-    values: LoginParams,
-  ) => {
+  const onFinish: FormProps<LoginParams>["onFinish"] = async (values: LoginParams) => {
     const res = await performLogin(values);
 
     if (res.success) {
       setEnv(values.env);
       setToken(res.data?.token ?? null);
       openNotification("success", { title: "Login realizado com sucesso!" });
-      setLoading(false);
       setOpenSidebar(false);
     } else {
       openNotification("error", { title: "Erro!", description: res.message });
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   const onFinishFailed: FormProps<LoginParams>["onFinishFailed"] = () => {
@@ -39,12 +44,6 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
     });
     setLoading(false);
   };
-
-  const options: { label: string; value: Env }[] = [
-    { label: "HOM", value: "HOM" },
-    { label: "PROD", value: "PROD" },
-    { label: "DEV", value: "DEV" },
-  ];
 
   return (
     <div className="login">
@@ -56,7 +55,7 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
         initialValues={{ env: "HOM" as Env }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete="off"
+        autoComplete="on"
       >
         <Form.Item label="Ambiente" name="env" rules={[{ required: true }]}>
           <Select<Env>
@@ -64,9 +63,6 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
               root: "login__fields",
               content: "login__fields",
             }}
-            suffixIcon={
-              <CaretDownIcon size={20} style={{ color: "var(--white)" }} />
-            }
             options={options}
           />
         </Form.Item>

@@ -125,17 +125,37 @@ body,
       }
     }
 
+    &__loop {
+      display: flex;
+      margin-top: var(--space-12);
+      gap: var(--space-20);
+    }
+
     &__fields {
       background: var(--gray) !important;
       color: var(--white) !important;
       border: 0;
+    }
+  }
 
-      .anticon svg {
-        color: var(--white);
-      }
-      .ant-select-selection-item {
-        background: var(--black) !important;
-      }
+  .checkbox {
+    margin-top: var(--space-20);
+
+    .ant-checkbox {
+      background: var(--gray);
+      box-shadow: var(--white-shadow);
+    }
+
+    .ant-checkbox-checked {
+      background: var(--blue-02);
+    }
+
+    &__label {
+      color: var(--white);
+      display: flex;
+      place-items: center;
+      place-self: center;
+      gap: var(--space-4);
     }
   }
 

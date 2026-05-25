@@ -1,18 +1,23 @@
-import { MagnifyingGlassIcon, CaretDownIcon } from "@phosphor-icons/react";
-import { Input, Button, Select } from "antd";
-import { useState } from "react";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { Input, Button } from "antd";
+import Select from "../Select";
+import { useState, useEffect } from "react";
 import { getProjects } from "../../services/projects";
 import { useApp } from "../../context/appContext";
 import { useNotification } from "../../context/notificationContext";
+import type { Options } from "../../types/Utils";
 import "./styles.scss";
 
-type ProjectOptions = { value: string; label: string };
-
 function ProjectSelect() {
-  const [projectOptions, setProjectOptions] = useState<ProjectOptions[]>();
+  const [projects, setProjects] = useState<Options<string>[]>();
   const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
-  const { env, token, tenantId, setTenantId, setProjectId } = useApp();
+  const { env, token, tenantId, projectId, setTenantId, setProjectId } = useApp();
+
+  useEffect(() => {
+    setProjects([]);
+    setProjectId(null);
+  }, [tenantId]);
 
   const handleProjects = async () => {
     if (!token) {
@@ -39,13 +44,12 @@ function ProjectSelect() {
         value: project.id,
         label: project.name,
       }));
-      setProjectOptions(options);
-      setLoading(false);
+      setProjects(options);
     } else {
       openNotification("error", { title: "Erro!", description: res.message });
-      setProjectOptions([]);
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -64,15 +68,9 @@ function ProjectSelect() {
 
       <Select
         placeholder="Projeto"
-        classNames={{
-          root: "project__fields",
-          content: "project__fields",
-        }}
-        suffixIcon={
-          <CaretDownIcon size={20} style={{ color: "var(--white)" }} />
-        }
         disabled={!tenantId}
-        options={projectOptions}
+        value={projectId}
+        options={projects}
         onChange={(e) => setProjectId(e)}
       ></Select>
     </div>

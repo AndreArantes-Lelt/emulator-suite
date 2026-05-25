@@ -8,8 +8,8 @@ type AppContextType = {
   projectId: string | null;
   setEnv: (env: Env | "HOM") => void;
   setToken: (token: string | null) => void;
-  setTenantId: (token: string | null) => void;
-  setProjectId: (token: string | null) => void;
+  setTenantId: (tenantId: string | null) => void;
+  setProjectId: (projectId: string | null) => void;
   clearSession: () => void;
 };
 
