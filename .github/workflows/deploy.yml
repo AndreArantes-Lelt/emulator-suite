@@ -33,7 +33,7 @@ jobs:
       - name: Create .env file
         run: |
           cat << 'EOF' > .env
-          ${{ vars.ENV_FILE }}
+          ${{ vars.ENV_URLS }}
           EOF
 
       - name: Build project
