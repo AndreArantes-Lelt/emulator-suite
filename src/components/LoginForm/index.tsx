@@ -23,7 +23,9 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
   const { openNotification } = useNotification();
   const { setEnv, setToken } = useApp();
 
-  const onFinish: FormProps<LoginParams>["onFinish"] = async (values: LoginParams) => {
+  const onFinish: FormProps<LoginParams>["onFinish"] = async (
+    values: LoginParams,
+  ) => {
     const res = await performLogin(values);
 
     if (res.success) {

@@ -12,7 +12,8 @@ function ProjectSelect() {
   const [projects, setProjects] = useState<Options<string>[]>();
   const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
-  const { env, token, tenantId, projectId, setTenantId, setProjectId } = useApp();
+  const { env, token, tenantId, projectId, setTenantId, setProjectId } =
+    useApp();
 
   useEffect(() => {
     setProjects([]);

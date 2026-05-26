@@ -22,8 +22,11 @@ const causes: Options<SensorCauses>[] = [
 function SensorTab() {
   const [sensors, setSensors] = useState<Options<string>[]>();
   const [selectedSensors, setSelectedSensors] = useState<string[]>();
-  const [selectedCause, setSelectedCause] = useState<SensorCauses>("KEEP_ALIVE");
-  const [isPayloadLoop, setPayloadLoop] = useState(false);
+  const [selectedCause, setSelectedCause] =
+    useState<SensorCauses>("KEEP_ALIVE");
+  const [isPayloadLoopMode, setPayloadLoopMode] = useState(false);
+  const [payloadLoop, setPayloadLoop] = useState(1);
+  const [payloadDelay, setPayloadDelay] = useState(0.2);
   const [isLoadingSensors, setLoadingSensors] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
@@ -57,6 +60,16 @@ function SensorTab() {
     })();
   }, [projectId]);
 
+  useEffect(() => {
+    if (!isPayloadLoopMode) {
+      setPayloadLoop(1);
+      setPayloadDelay(0.2);
+    }
+  }, [isPayloadLoopMode]);
+
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
   const handleAlarm = async () => {
     if (!token || !tenantId) return;
 
@@ -66,32 +79,41 @@ function SensorTab() {
     }
     setLoading(true);
 
-    const promises = selectedSensors.map(async (sensorId) => {
-      const sensor: SensorParams = {
-        env,
-        token,
-        tenantId,
-        devEui: sensorId,
-        cause: selectedCause,
-      };
+    let successCount = 0,
+      errorCount = 0;
 
-      return await sendSensorAlarm(sensor);
-    });
+    for (let i = 0; i < payloadLoop; i++) {
+      const promises = selectedSensors.map(async (sensorId) => {
+        const sensor: SensorParams = {
+          env,
+          token,
+          tenantId,
+          devEui: sensorId,
+          cause: selectedCause,
+        };
 
-    const res = await Promise.all(promises);
+        return await sendSensorAlarm(sensor);
+      });
 
-    const successCount = res.filter((r) => r.success).length;
-    const errorCount = res.filter((r) => !r.success).length;
+      const res = await Promise.all(promises);
+
+      successCount += res.filter((r) => r.success).length;
+      errorCount += res.filter((r) => !r.success).length;
+
+      if (isPayloadLoopMode && i < payloadLoop - 1) {
+        await delay(payloadDelay * 1000);
+      }
+    }
 
     if (successCount > 0) {
       openNotification("success", {
-        title: `${successCount} sensores alarmados com sucesso!`,
+        title: `${successCount} pacotes enviados com sucesso!`,
       });
     }
 
     if (errorCount > 0) {
       openNotification("error", {
-        title: `${errorCount} sensores falharam ao alarmar!`,
+        title: `${errorCount} pacotes enviados falharam!`,
       });
     }
 
@@ -118,13 +140,17 @@ function SensorTab() {
         <div className="data__alarm">
           <Select
             style={{ width: "35%" }}
-            disabled={selectedSensors?.length === 0}
+            disabled={!selectedSensors || selectedSensors.length === 0}
             value={selectedCause}
             options={causes}
             onChange={(e: SensorCauses) => setSelectedCause(e)}
           />
 
-          <Button loading={isLoading} disabled={!projectId} onClick={() => handleAlarm()}>
+          <Button
+            loading={isLoading}
+            disabled={!projectId}
+            onClick={() => handleAlarm()}
+          >
             {!isLoading && <SirenIcon size={20} />}
           </Button>
         </div>
@@ -134,24 +160,40 @@ function SensorTab() {
             root: "checkbox",
             label: "checkbox__label",
           }}
-          onChange={(e) => setPayloadLoop(e.target.checked)}
+          disabled={!selectedSensors || selectedSensors.length === 0}
+          checked={isPayloadLoopMode}
+          onChange={(e) => setPayloadLoopMode(e.target.checked)}
         >
           <ArrowsClockwiseIcon weight="bold" size={20} />
           Teste de carga (Loop)
         </Checkbox>
 
-        {isPayloadLoop && (
+        {isPayloadLoopMode && (
           <div className="data__loop">
-            <InputNumber
-              className="data__fields"
-              mode="spinner"
-              placeholder="Repetições"
-            />
-            <InputNumber
-              classNames={{ root: "data__fields" }}
-              mode="spinner"
-              placeholder="Delay entre payloads"
-            />
+            <div>
+              <p>Repetições:</p>
+              <InputNumber
+                classNames={{ root: "data__fields", input: "data__fields" }}
+                mode="spinner"
+                min={1}
+                max={50}
+                value={payloadLoop}
+                onChange={(e) => setPayloadLoop(e ?? 1)}
+              />
+            </div>
+
+            <div>
+              <p>Delay entre payloads (seg):</p>
+              <InputNumber
+                classNames={{ root: "data__fields", input: "data__fields" }}
+                mode="spinner"
+                min={0.2}
+                max={60}
+                step={0.01}
+                value={payloadDelay}
+                onChange={(e) => setPayloadDelay(e ?? 0.2)}
+              />
+            </div>
           </div>
         )}
       </div>

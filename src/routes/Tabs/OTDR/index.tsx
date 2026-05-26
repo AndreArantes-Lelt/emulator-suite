@@ -1,11 +1,9 @@
-
-
+// TODO: alarm OTDR tab
 function OTDRTab() {
   return (
     <>
-      
       <div className="data">
-        <p>OTDR</p>
+        <p></p>
       </div>
     </>
   );

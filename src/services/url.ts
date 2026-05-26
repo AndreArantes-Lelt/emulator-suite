@@ -19,8 +19,6 @@ const buildUrlSet = (env: Env): UrlOptions => {
   return {
     AUTH_PROJ: make("AUTH_PROJ"),
     SENSOR_ALARM: make("SENSOR_ALARM"),
-    WEBHOOK_ONU: make("WEBHOOK_ONU"),
-    ONU_SEARCH_BASE: make("ONU_SEARCH_BASE"),
     OTDR_LIST: make("OTDR_LIST"),
     OTDR_ALARM_BASE: make("OTDR_ALARM_BASE"),
   };

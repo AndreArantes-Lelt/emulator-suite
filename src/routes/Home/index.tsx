@@ -25,6 +25,7 @@ function Home() {
       key: "OTDR",
       label: "OTDR",
       children: <OTDRTab />,
+      disabled: true,
     },
   ];
 
