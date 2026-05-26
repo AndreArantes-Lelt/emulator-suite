@@ -1,14 +1,20 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { createRoot } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 import { AppProvider } from "./context/appContext";
 import { NotificationProvider } from "./context/notificationContext";
 import Home from "./routes/Home";
 import NotFound from "./routes/NotFound";
 import "./styles/main.scss";
 
+declare global {
+  interface Window {
+    reactRoot?: Root;
+  }
+}
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/emulator-suite">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
@@ -17,7 +23,13 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(
+const container = document.getElementById("root")!;
+
+if (!window.reactRoot) {
+  window.reactRoot = createRoot(container);
+}
+
+window.reactRoot.render(
   <AppProvider>
     <NotificationProvider>
       <App />
