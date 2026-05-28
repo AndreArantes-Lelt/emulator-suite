@@ -45,6 +45,10 @@ function ProjectSelect() {
         value: project.id,
         label: project.name,
       }));
+
+      if (options.length === 0) {
+        openNotification("info", { title: "Este tenant não possui projetos" });
+      }
       setProjects(options);
     } else {
       openNotification("error", { title: "Erro!", description: res.message });
@@ -59,6 +63,7 @@ function ProjectSelect() {
         <Input
           placeholder="Tenant ID"
           className="project__fields"
+          disabled={isLoading}
           onChange={(e) => setTenantId(e.target.value)}
         />
 
@@ -69,7 +74,7 @@ function ProjectSelect() {
 
       <Select
         placeholder="Projeto"
-        disabled={!tenantId}
+        disabled={projects?.length === 0 || isLoading}
         value={projectId}
         options={projects}
         onChange={(e) => setProjectId(e)}

@@ -1,4 +1,8 @@
-import { SirenIcon, ArrowsClockwiseIcon } from "@phosphor-icons/react";
+import {
+  SirenIcon,
+  ArrowsClockwiseIcon,
+  SwapIcon,
+} from "@phosphor-icons/react";
 import { Button, Checkbox, InputNumber } from "antd";
 import Select from "../../../components/Select";
 import { useState, useEffect } from "react";
@@ -25,12 +29,27 @@ function SensorTab() {
   const [selectedCause, setSelectedCause] =
     useState<SensorCauses>("KEEP_ALIVE");
   const [isPayloadLoopMode, setPayloadLoopMode] = useState(false);
-  const [payloadLoop, setPayloadLoop] = useState(1);
-  const [payloadDelay, setPayloadDelay] = useState(0.2);
+  const [isCauseLoopMode, setCauseLoopMode] = useState(false);
+  const [payloadLoop, setPayloadLoop] = useState(0);
+  const [payloadDelay, setPayloadDelay] = useState(0);
   const [isLoadingSensors, setLoadingSensors] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoadingPayload, setLoadingPayload] = useState(false);
   const { openNotification } = useNotification();
   const { env, token, tenantId, projectId } = useApp();
+
+  useEffect(() => {
+    if (!isPayloadLoopMode) {
+      setPayloadLoop(2);
+      setPayloadDelay(0.2);
+      setCauseLoopMode(false);
+    }
+  }, [isPayloadLoopMode]);
+
+  useEffect(() => {
+    if (!selectedSensors || selectedSensors.length === 0) {
+      setPayloadLoopMode(false);
+    }
+  }, [selectedSensors]);
 
   useEffect(() => {
     if (!token || !tenantId || !projectId) return;
@@ -51,6 +70,12 @@ function SensorTab() {
           value: sensor.id,
           label: sensor.name,
         }));
+
+        if (options.length === 0) {
+          openNotification("info", {
+            title: "Este projeto não possui sensores",
+          });
+        }
         setSensors(options);
       } else {
         openNotification("error", { title: "Erro!", description: res.message });
@@ -59,13 +84,6 @@ function SensorTab() {
       setLoadingSensors(false);
     })();
   }, [projectId]);
-
-  useEffect(() => {
-    if (!isPayloadLoopMode) {
-      setPayloadLoop(1);
-      setPayloadDelay(0.2);
-    }
-  }, [isPayloadLoopMode]);
 
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
@@ -77,19 +95,19 @@ function SensorTab() {
       openNotification("warning", { title: "Selecione ao menos um sensor" });
       return;
     }
-    setLoading(true);
+    setLoadingPayload(true);
 
     let successCount = 0,
       errorCount = 0;
 
-    for (let i = 0; i < payloadLoop; i++) {
+    for (let i = 0; i < (isPayloadLoopMode ? payloadLoop : 1); i++) {
       const promises = selectedSensors.map(async (sensorId) => {
         const sensor: SensorParams = {
           env,
           token,
           tenantId,
           devEui: sensorId,
-          cause: selectedCause,
+          cause: isCauseLoopMode && i % 2 === 0 ? "KEEP_ALIVE" : selectedCause,
         };
 
         return await sendSensorAlarm(sensor);
@@ -117,7 +135,7 @@ function SensorTab() {
       });
     }
 
-    setLoading(false);
+    setLoadingPayload(false);
   };
 
   return (
@@ -129,7 +147,7 @@ function SensorTab() {
             style={{ width: "60%" }}
             mode="multiple"
             loading={isLoadingSensors}
-            disabled={!projectId}
+            disabled={!projectId || isLoadingSensors || isLoadingPayload}
             value={selectedSensors}
             options={sensors}
             onChange={(e) => setSelectedSensors(e)}
@@ -140,18 +158,22 @@ function SensorTab() {
         <div className="data__alarm">
           <Select
             style={{ width: "35%" }}
-            disabled={!selectedSensors || selectedSensors.length === 0}
+            disabled={
+              !selectedSensors ||
+              selectedSensors.length === 0 ||
+              isLoadingPayload
+            }
             value={selectedCause}
             options={causes}
             onChange={(e: SensorCauses) => setSelectedCause(e)}
           />
 
           <Button
-            loading={isLoading}
-            disabled={!projectId}
+            loading={isLoadingPayload}
+            disabled={!projectId || isLoadingPayload}
             onClick={() => handleAlarm()}
           >
-            {!isLoading && <SirenIcon size={20} />}
+            {!isLoadingPayload && <SirenIcon size={20} />}
           </Button>
         </div>
 
@@ -160,7 +182,9 @@ function SensorTab() {
             root: "checkbox",
             label: "checkbox__label",
           }}
-          disabled={!selectedSensors || selectedSensors.length === 0}
+          disabled={
+            !selectedSensors || selectedSensors.length === 0 || isLoadingPayload
+          }
           checked={isPayloadLoopMode}
           onChange={(e) => setPayloadLoopMode(e.target.checked)}
         >
@@ -175,11 +199,23 @@ function SensorTab() {
               <InputNumber
                 classNames={{ root: "data__fields", input: "data__fields" }}
                 mode="spinner"
-                min={1}
+                min={2}
                 max={50}
                 value={payloadLoop}
-                onChange={(e) => setPayloadLoop(e ?? 1)}
+                onChange={(e) => setPayloadLoop(e ?? 2)}
               />
+
+              <Checkbox
+                classNames={{
+                  root: "checkbox",
+                  label: "checkbox__label",
+                }}
+                checked={isCauseLoopMode}
+                onChange={(e) => setCauseLoopMode(e.target.checked)}
+              >
+                <SwapIcon size={20} />
+                Alternar keep alive
+              </Checkbox>
             </div>
 
             <div>

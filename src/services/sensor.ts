@@ -37,7 +37,7 @@ export async function getSensorsFromProject({
 
   if (!response.ok) {
     const text = await response.text();
-    return { success: false, data: [], message: `${response.status}: ${text}` };
+    return { success: false, message: `${response.status}: ${text}` };
   }
 
   const body = await response.json();
