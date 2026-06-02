@@ -1,10 +1,10 @@
 import type { TenantParams } from "../types/Tenant";
-import type { ApiResult } from "../types/Utils";
+import type { ApiResult } from "../types/Common";
 import { getUrls } from "./url";
 
-type ProjectResponse = {
-  id: string;
-  name: string;
+export type ProjectResponse = {
+  id: string | null;
+  name: string | null;
 };
 
 export async function getProjects({

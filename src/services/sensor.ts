@@ -1,5 +1,5 @@
 import type { TenantParams } from "../types/Tenant";
-import type { ApiResult } from "../types/Utils";
+import type { ApiResult } from "../types/Common";
 import type { Env } from "../types/Tenant";
 import { getUrls } from "./url";
 
@@ -51,6 +51,7 @@ export async function getSensorsFromProject({
   return {
     success: true,
     data: items
+      .filter((item) => item?.network_server !== "SNMP")
       .map((item: any) => {
         const redeId =
           item.identificator_in_network ||

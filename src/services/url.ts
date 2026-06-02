@@ -1,5 +1,5 @@
 import type { Env } from "../types/Tenant";
-import type { UrlOptions } from "../types/Utils";
+import type { UrlOptions } from "../types/Common";
 
 const getEnvVar = (key: string): string | undefined => {
   const env = (import.meta as any).env ?? {};

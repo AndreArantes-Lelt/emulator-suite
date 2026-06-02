@@ -2,7 +2,7 @@ import { Form, type FormProps, Input, Button } from "antd";
 import Select from "../Select";
 import { type LoginParams, performLogin } from "../../services/login";
 import type { Env } from "../../types/Tenant";
-import type { Options } from "../../types/Utils";
+import type { Options } from "../../types/Common";
 import { useApp } from "../../context/appContext";
 import { useState } from "react";
 import { useNotification } from "../../context/notificationContext";
@@ -30,7 +30,7 @@ function LoginForm({ setOpenSidebar }: LoginFormProps) {
 
     if (res.success) {
       setEnv(values.env);
-      setToken(res.data?.token ?? null);
+      setToken(res.data?.token ?? "");
       openNotification("success", { title: "Login realizado com sucesso!" });
       setOpenSidebar(false);
     } else {

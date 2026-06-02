@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: deploy to github pages
 
 on:
   push:
@@ -18,35 +18,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository code
+      - name: checkout repository code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: setup node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      - name: Install dependencies
+      - name: install dependencies
         run: npm install
 
-      - name: Create .env file
+      - name: create .env file
         run: |
           cat << 'EOF' > .env
           ${{ vars.ENV_URLS }}
           EOF
 
-      - name: Build project
+      - name: build project
         run: npm run build
 
-      - name: Setup Pages
+      - name: setup pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: "./dist"
 
-      - name: Deploy to GitHub Pages
+      - name: deploy
         id: deployment
         uses: actions/deploy-pages@v4

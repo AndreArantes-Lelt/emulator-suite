@@ -2,22 +2,21 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { Input, Button } from "antd";
 import Select from "../Select";
 import { useState, useEffect } from "react";
-import { getProjects } from "../../services/projects";
+import { type ProjectResponse, getProjects } from "../../services/projects";
 import { useApp } from "../../context/appContext";
 import { useNotification } from "../../context/notificationContext";
-import type { Options } from "../../types/Utils";
+import type { Options } from "../../types/Common";
 import "./styles.scss";
 
 function ProjectSelect() {
   const [projects, setProjects] = useState<Options<string>[]>();
   const [isLoading, setLoading] = useState(false);
   const { openNotification } = useNotification();
-  const { env, token, tenantId, projectId, setTenantId, setProjectId } =
-    useApp();
+  const { env, token, tenantId, projectId, setTenantId, setProject } = useApp();
 
   useEffect(() => {
     setProjects([]);
-    setProjectId(null);
+    setProject({ id: null, name: null });
   }, [tenantId]);
 
   const handleProjects = async () => {
@@ -42,8 +41,8 @@ function ProjectSelect() {
 
     if (res.success) {
       const options = (res.data ?? []).map((project) => ({
-        value: project.id,
-        label: project.name,
+        value: project.id ?? "",
+        label: project.name ?? "",
       }));
 
       if (options.length === 0) {
@@ -55,6 +54,16 @@ function ProjectSelect() {
     }
 
     setLoading(false);
+  };
+
+  const handleSelectedProject = (selected: string) => {
+    const selectedProject = projects?.find((opt) => opt.value === selected);
+    const project: ProjectResponse = {
+      id: selectedProject?.value ?? "",
+      name: selectedProject?.label ?? "",
+    };
+
+    setProject(project);
   };
 
   return (
@@ -77,8 +86,8 @@ function ProjectSelect() {
         disabled={projects?.length === 0 || isLoading}
         value={projectId}
         options={projects}
-        onChange={(e) => setProjectId(e)}
-      ></Select>
+        onChange={(e) => handleSelectedProject(e)}
+      />
     </div>
   );
 }

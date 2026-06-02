@@ -1,5 +1,5 @@
 import type { Env } from "../types/Tenant";
-import type { ApiResult } from "../types/Utils";
+import type { ApiResult } from "../types/Common";
 import { getUrls } from "./url";
 
 export type LoginParams = {
