@@ -112,8 +112,15 @@ body,
     }
 
     &__otdr {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       width: 60%;
       margin-bottom: var(--space-24);
+      gap: var(--space-20);
+
+      > :first-child {
+        grid-column: 1 / -1;
+      }
     }
 
     &__alarm {
@@ -146,6 +153,19 @@ body,
       box-shadow: var(--shadow) !important;
       color: var(--white) !important;
       border: 0;
+
+      &__actions {
+        background: var(--black);
+
+        .ant-input-number-action {
+          color: var(--white) !important;
+        }
+
+        .ant-input-number-action-up-disabled,
+        .ant-input-number-action-down-disabled {
+          color: var(--gray) !important;
+        }
+      }
     }
   }
 

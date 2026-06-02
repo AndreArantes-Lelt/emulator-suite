@@ -16,7 +16,7 @@ export type OtdrParams = {
   distance: string;
   eventName: string;
   eventCode: number;
-  eventStr: string;
+  port: string;
   serialNumber: string;
   formattedDesc: string;
 };
@@ -85,7 +85,7 @@ export async function sendOtdrAlarm({
   distance,
   eventName,
   eventCode,
-  eventStr,
+  port,
   serialNumber,
   formattedDesc,
 }: OtdrParams): Promise<ApiResult<{}>> {
@@ -127,7 +127,7 @@ export async function sendOtdrAlarm({
         {
           name: "1.3.6.1.4.1.35873.5.1.2.1.1.1.4",
           type: "OctetString",
-          value: "port=1",
+          value: `port=${String(port)}`,
         },
         {
           name: "1.3.6.1.4.1.35873.5.1.2.1.1.1.6",
@@ -177,7 +177,7 @@ export async function sendOtdrAlarm({
         {
           name: "1.3.6.1.4.1.35873.5.1.2.1.1.1.10.6",
           type: "OctetString",
-          value: eventStr,
+          value: eventName,
         },
         {
           name: "1.3.6.1.4.1.35873.5.1.2.1.1.1.11.1",

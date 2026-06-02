@@ -1,4 +1,4 @@
-import { SirenIcon } from "@phosphor-icons/react";
+import { NetworkIcon, SirenIcon } from "@phosphor-icons/react";
 import { Button, InputNumber } from "antd";
 import Select from "../../../components/Select";
 import { useState, useEffect } from "react";
@@ -55,6 +55,7 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
     mapEventToSeverity["Clear"],
   );
   const [distance, setDistance] = useState("0.01");
+  const [port, setPort] = useState("1");
   const [isLoadingOtdrs, setLoadingOtdrs] = useState(false);
   const [isLoadingPayload, setLoadingPayload] = useState(false);
   const { openNotification } = useNotification();
@@ -119,7 +120,7 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
         distance,
         eventName: selectedCause.name,
         eventCode: selectedCause.code,
-        eventStr: selectedCause.name,
+        port,
         serialNumber: otdrData?.serial_number || "",
         formattedDesc: otdrData?.description || otdrData?.name || "",
       };
@@ -164,30 +165,51 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
         </div>
 
         <div className="data__otdr">
-          <p>Causa:</p>
-          <Select
-            style={{ width: "80%" }}
-            disabled={
-              !selectedOtdrs || selectedOtdrs.length === 0 || isLoadingPayload
-            }
-            options={events}
-            value={selectedCause.name}
-            onChange={(e: OtdrCauses) =>
-              setSelectedCause(mapEventToSeverity[e])
-            }
-          />
+          <div>
+            <p>Causa:</p>
+            <Select
+              style={{ width: "100%" }}
+              disabled={
+                !selectedOtdrs || selectedOtdrs.length === 0 || isLoadingPayload
+              }
+              options={events}
+              value={selectedCause.name}
+              onChange={(e: OtdrCauses) =>
+                setSelectedCause(mapEventToSeverity[e])
+              }
+            />
+          </div>
 
-          <p>Distância (km):</p>
-          <InputNumber
-            classNames={{ root: "data__fields", input: "data__fields" }}
-            mode="spinner"
-            min={"0.01"}
-            max={"100"}
-            step={0.01}
-            value={distance}
-            onChange={(e) => setDistance(e ?? "0.01")}
-            stringMode
-          />
+          <div>
+            <p>Distância (km):</p>
+            <InputNumber
+              classNames={{ root: "data__fields", input: "data__fields" }}
+              mode="spinner"
+              min={"0.01"}
+              max={"100"}
+              step={0.01}
+              value={distance}
+              onChange={(e) => setDistance(e ?? "0.01")}
+              stringMode
+            />
+          </div>
+
+          <div>
+            <p>Porta:</p>
+            <InputNumber
+              classNames={{
+                root: "data__fields",
+                input: "data__fields",
+                actions: "data__fields__actions",
+              }}
+              prefix={<NetworkIcon size={15} />}
+              min={"1"}
+              max={"8"}
+              value={port}
+              onChange={(e) => setPort(e ?? "1")}
+              stringMode
+            />
+          </div>
         </div>
 
         <div className="data__alarm">
