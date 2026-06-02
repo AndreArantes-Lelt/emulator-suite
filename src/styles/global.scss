@@ -111,6 +111,11 @@ body,
       margin-bottom: var(--space-20);
     }
 
+    &__otdr {
+      width: 60%;
+      margin-bottom: var(--space-24);
+    }
+
     &__alarm {
       display: flex;
       gap: var(--space-20);
@@ -129,6 +134,11 @@ body,
       display: flex;
       margin-top: var(--space-12);
       gap: var(--space-20);
+
+      > div {
+        display: flex;
+        flex-direction: column;
+      }
     }
 
     &__fields {

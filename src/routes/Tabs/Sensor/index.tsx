@@ -8,7 +8,7 @@ import Select from "../../../components/Select";
 import { useState, useEffect } from "react";
 import { useApp } from "../../../context/appContext";
 import { useNotification } from "../../../context/notificationContext";
-import type { Options } from "../../../types/Utils";
+import type { Options } from "../../../types/Common";
 import type { SensorCauses } from "../../../types/Causes";
 import {
   type SensorParams,
@@ -23,7 +23,11 @@ const causes: Options<SensorCauses>[] = [
   { label: "Bateria", value: "BATTERY_ALERT" },
 ];
 
-function SensorTab() {
+interface SensorTabProps {
+  isSelectedTab: boolean;
+}
+
+function SensorTab({ isSelectedTab }: SensorTabProps) {
   const [sensors, setSensors] = useState<Options<string>[]>();
   const [selectedSensors, setSelectedSensors] = useState<string[]>();
   const [selectedCause, setSelectedCause] =
@@ -52,7 +56,7 @@ function SensorTab() {
   }, [selectedSensors]);
 
   useEffect(() => {
-    if (!token || !tenantId || !projectId) return;
+    if (!token || !tenantId || !projectId || !isSelectedTab) return;
 
     (async () => {
       setLoadingSensors(true);
