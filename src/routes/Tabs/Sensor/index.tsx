@@ -21,6 +21,8 @@ const causes: Options<SensorCauses>[] = [
   { label: "Potencia ótica", value: "OPTICAL_POWER_ALERT" },
   { label: "Temperatura", value: "TEMPERATURE_ALERT" },
   { label: "Bateria", value: "BATTERY_ALERT" },
+  { label: "Movimento", value: "MOVEMENT_ALERT" },
+  { label: "Possivel abertura", value: "LIGHT_ALERT" },
 ];
 
 interface SensorTabProps {
@@ -87,7 +89,7 @@ function SensorTab({ isSelectedTab }: SensorTabProps) {
 
       setLoadingSensors(false);
     })();
-  }, [projectId]);
+  }, [projectId, isSelectedTab]);
 
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));

@@ -92,7 +92,7 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
 
       setLoadingOtdrs(false);
     })();
-  }, [projectId]);
+  }, [projectId, isSelectedTab]);
 
   const handleAlarm = async () => {
     if (!token || !tenantId) return;
