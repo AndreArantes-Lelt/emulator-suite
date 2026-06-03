@@ -102,7 +102,7 @@ export async function sendOtdrAlarm({
       request_id: "",
       error_index: 0,
       error_status: 0,
-      source_ip: import.meta.env.VITE_OTDR_SOURCE_IP ?? "127.0.0.1:5000",
+      source_ip: "127.0.0.1:5000",
       varbinds: [
         {
           name: "1.3.6.1.6.3.1.1.4.1.0",
@@ -117,7 +117,7 @@ export async function sendOtdrAlarm({
         {
           name: "1.3.6.1.4.1.35873.5.1.2.1.1.1.3",
           type: "OctetString",
-          value: `RTU : ${otdrName} (${import.meta.env.VITE_OTDR_RTU_IP ?? "127.0.0.1"})\n\tAlarm type: OPTICAL\n\tTimestamp: ${new Date().toLocaleString("pt-BR")}\n\tSeverity: ${severityName.toUpperCase()}\n\tLink name: Link 1 - Port 1\n\tProbable cause: ${eventName}\n\tOptical distance: ${distance}KM`,
+          value: `RTU : ${otdrName} (127.0.0.1)\n\tAlarm type: OPTICAL\n\tTimestamp: ${new Date().toLocaleString("pt-BR")}\n\tSeverity: ${severityName.toUpperCase()}\n\tLink name: Link 1 - Port 1\n\tProbable cause: ${eventName}\n\tOptical distance: ${distance}KM`,
         },
         {
           name: "1.3.6.1.4.1.35873.5.1.2.1.1.1.5",

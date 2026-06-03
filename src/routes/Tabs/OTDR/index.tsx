@@ -54,7 +54,7 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
   const [selectedCause, setSelectedCause] = useState<MapEvent>(
     mapEventToSeverity["Clear"],
   );
-  const [distance, setDistance] = useState("0.01");
+  const [distance, setDistance] = useState("0");
   const [port, setPort] = useState("1");
   const [isLoadingOtdrs, setLoadingOtdrs] = useState(false);
   const [isLoadingPayload, setLoadingPayload] = useState(false);
@@ -94,6 +94,10 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
       setLoadingOtdrs(false);
     })();
   }, [projectId, isSelectedTab]);
+
+  useEffect(() => {
+    selectedCause.name === "Clear" ? setDistance("0") : setDistance("0.01");
+  }, [selectedCause.name]);
 
   const handleAlarm = async () => {
     if (!token || !tenantId) return;
@@ -186,7 +190,7 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
               classNames={{ root: "data__fields", input: "data__fields" }}
               mode="spinner"
               min={"0.01"}
-              max={"100"}
+              max={selectedCause.name === "Clear" ? "0" : "100"}
               step={0.01}
               value={distance}
               onChange={(e) => setDistance(e ?? "0.01")}
@@ -206,7 +210,7 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
               min={"1"}
               max={"8"}
               value={port}
-              onChange={(e) => setPort(e ?? "1")}
+              onChange={(e) => setPort(e || "1")}
               stringMode
             />
           </div>

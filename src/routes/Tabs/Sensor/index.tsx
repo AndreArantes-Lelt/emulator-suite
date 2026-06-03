@@ -208,7 +208,7 @@ function SensorTab({ isSelectedTab }: SensorTabProps) {
                 min={2}
                 max={50}
                 value={payloadLoop}
-                onChange={(e) => setPayloadLoop(e ?? 2)}
+                onChange={(e) => setPayloadLoop(e || 2)}
               />
 
               <Checkbox
@@ -233,7 +233,7 @@ function SensorTab({ isSelectedTab }: SensorTabProps) {
                 max={60}
                 step={0.01}
                 value={payloadDelay}
-                onChange={(e) => setPayloadDelay(e ?? 0.2)}
+                onChange={(e) => setPayloadDelay(e || 0.2)}
               />
             </div>
           </div>
