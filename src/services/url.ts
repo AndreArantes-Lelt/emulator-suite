@@ -1,5 +1,5 @@
 import type { Env } from "../types/Tenant";
-import type { UrlOptions } from "../types/Common";
+import type { UrlOptions } from "../types/Url";
 
 const getEnvVar = (key: string): string | undefined => {
   const env = (import.meta as any).env ?? {};
@@ -19,8 +19,7 @@ const buildUrlSet = (env: Env): UrlOptions => {
   return {
     AUTH_PROJ: make("AUTH_PROJ"),
     SENSOR_ALARM: make("SENSOR_ALARM"),
-    OTDR_LIST: make("OTDR_LIST"),
-    OTDR_ALARM_BASE: make("OTDR_ALARM_BASE"),
+    OTDR_ALARM: make("OTDR_ALARM"),
   };
 };
 

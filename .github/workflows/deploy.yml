@@ -3,6 +3,7 @@ name: deploy to github pages
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read

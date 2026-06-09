@@ -218,7 +218,7 @@ export async function sendOtdrAlarm({
     },
   };
 
-  const response = await fetch(`${urls.OTDR_ALARM_BASE}/api/otdr-alarms`, {
+  const response = await fetch(`${urls.OTDR_ALARM}/api/otdr-alarms`, {
     method: "POST",
     headers: {
       Authorization: authHeader,
