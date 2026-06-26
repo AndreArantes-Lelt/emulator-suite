@@ -11,13 +11,13 @@ const severityMap: Record<Severity, Map<Severity>> = {
   CRITICAL: { name: "CRITICAL", code: 4 },
 };
 
-export type MapEvent = {
+export type OtdrEvent = {
   name: OtdrCauses;
   code: number;
   severity: Map<Severity>;
 };
 
-export const mapEventToSeverity: Record<OtdrCauses, MapEvent> = {
+export const mapOtdrEventToSeverity: Record<OtdrCauses, OtdrEvent> = {
   Clear: { name: "Clear", code: 0, severity: severityMap["CLEAR"] },
   "Fiber cut": {
     name: "Fiber cut",

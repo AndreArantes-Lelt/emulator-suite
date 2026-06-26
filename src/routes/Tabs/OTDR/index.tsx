@@ -6,7 +6,10 @@ import { useApp } from "../../../context/appContext";
 import { useNotification } from "../../../context/notificationContext";
 import type { Options } from "../../../types/Common";
 import type { OtdrCauses } from "../../../types/Causes";
-import { mapEventToSeverity, type MapEvent } from "../../../utils/otdr";
+import {
+  mapOtdrEventToSeverity,
+  type OtdrEvent,
+} from "../../../utils/mapOtdrEventToSeverity";
 import {
   type OtdrParams,
   getOtdrsFromProject,
@@ -51,8 +54,8 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
   const [otdrs, setOtdrs] = useState<Options<string>[]>();
   const [otdrsData, setOtdrsData] = useState<Array<any>>();
   const [selectedOtdrs, setSelectedOtdrs] = useState<string[]>();
-  const [selectedCause, setSelectedCause] = useState<MapEvent>(
-    mapEventToSeverity["Clear"],
+  const [selectedCause, setSelectedCause] = useState<OtdrEvent>(
+    mapOtdrEventToSeverity["Clear"],
   );
   const [distance, setDistance] = useState("0");
   const [port, setPort] = useState("1");
@@ -179,7 +182,7 @@ function OTDRTab({ isSelectedTab }: OtdrTabProps) {
               options={events}
               value={selectedCause.name}
               onChange={(e: OtdrCauses) =>
-                setSelectedCause(mapEventToSeverity[e])
+                setSelectedCause(mapOtdrEventToSeverity[e])
               }
             />
           </div>
